@@ -88,17 +88,34 @@
 <script src="js/scenes/Act_III.js"></script>
 <script src="js/scenes/Scene_Meta.js"></script>
 
-<!-- Game Scripts -->
 <script>
-Game.stats = false;
-window.onload = function(){
-	try{
-		Game.init();
-		//Game.init("Game");
-	}catch(e){
-		document.getElementById("warning").style.display = "block";
-	}
+window.addEventListener("beforeunload", function (e) {
+  // Show a warning before leaving the page
+  const message = "Are you sure you want to leave? Your progress may be lost.";
+  e.preventDefault();
+  e.returnValue = message; // triggers the browser's built-in dialog
+  return message;
+});
+</script>
+
+<script>
+window.onload = function() {
+  try {
+    if (typeof Game !== "undefined" && Game.init) {
+      Game.stats = false;
+      Game.init(); // initialize the game safely
+    } else {
+      console.error("Game object or Game.init() not found.");
+      document.getElementById("warning").style.display = "block";
+    }
+  } catch (e) {
+    console.error("Game initialization error:", e);
+    const warning = document.getElementById("warning");
+    if (warning) warning.style.display = "block";
+  }
 };
-window.SHARE_TEXT = 'همین الان یه بازی خیلی خفن رو بازی کردم'
+
+// Share text and URL (these can be used for a share button later)
+window.SHARE_TEXT = "همین الان یه بازی خیلی خفن رو بازی کردم";
 window.SHARE_URL = "";
 </script>
